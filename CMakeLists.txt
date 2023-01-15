@@ -1,14 +1,30 @@
+################################################################################
+# Set minimum required version of cmake, project name and compile options
+################################################################################
 cmake_minimum_required(VERSION 3.5.1)
 project(robile_gazebo)
 
-add_compile_options(-std=c++11)
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 11)
+endif()
 
-find_package(catkin REQUIRED COMPONENTS roscpp rviz kelo_tulip)
+################################################################################
+# Find ament packages and libraries for ament and system dependencies
+################################################################################
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(gazebo REQUIRED)
+find_package(gazebo_ros_pkgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(tf2 REQUIRED)
 
-find_package(gazebo)
-find_package(roslaunch)
 
+################################################################################
 # The documentation build option set to OFF by default
+################################################################################
 option(BUILD_DOC "Build documentation" OFF)
 if(BUILD_DOC)
     # check if Doxygen is installed
@@ -33,24 +49,42 @@ if(BUILD_DOC)
     endif (DOXYGEN_FOUND)
 endif(BUILD_DOC)
 
-catkin_package(
-    INCLUDE_DIRS include
-)
+################################################################################
+# Build
+################################################################################
 
 include_directories(
     include
-    ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(robile_gazebo_platform_controller
-    src/KeloDrive.cpp
-    src/RobilePlatformController.cpp
-    src/main.cpp
+set(dependencies
+  geometry_msgs
+  nav_msgs
+  rclcpp
+  sensor_msgs
+  tf2
 )
+set(EXEC_NAME "robile_gazebo_platform_controller")
+#add_executable(${EXEC_NAME}
+#    src/KeloDrive.cpp
+#    src/RobilePlatformController.cpp
+#    src/main.cpp
+#)
+#ament_target_dependencies(${EXEC_NAME} ${dependencies})
 
-target_link_libraries(robile_gazebo_platform_controller
-    ${catkin_LIBRARIES}
-)
-
+################################################################################
+# Install
+################################################################################
+#install(TARGETS ${EXEC_NAME}
+#  DESTINATION lib/${PROJECT_NAME}
+#)
 install(DIRECTORY config launch
-        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+  DESTINATION share/${PROJECT_NAME}/
+)
+
+################################################################################
+# Macro for ament package
+################################################################################
+ament_export_include_directories(include)
+#ament_export_dependencies(${dependencies})
+ament_package()
