@@ -6,10 +6,10 @@ Gazebo simulations for KELO ROBILE robots
 
 ## Installation
 In addition to a few ROS dependencies, this package also depends on the following packages provided by KELO-robotics:
-1. [kelo_tulip](https://github.com/kelo-robotics/kelo_tulip)
+1. [kelo_tulip](https://github.com/kelo-robotics/kelo_tulip) [Optional: only if you want smart wheel emulated]
 2. [robile_description](https://github.com/kelo-robotics/robile_description)
 
-Assuming you have a catkin workspace at `~/catkin_ws`, execute the below commands to install the simulator and its dependencies
+Assuming you have a catkin workspace at `~/ros2_ws`, execute the below commands to install the simulator and its dependencies
 
 ~~~ sh
 sudo apt install ros-$ROS_DISTRO-controller-manager ros-$ROS_DISTRO-effort-controllers ros-$ROS_DISTRO-velocity-controllers ros-$ROS_DISTRO-joint-state-controller ros-$ROS_DISTRO-gazebo-ros ros-$ROS_DISTRO-gazebo-ros-control
@@ -21,7 +21,7 @@ git clone https://github.com/kelo-robotics/robile_gazebo.git
 
 catkin build kelo_tulip # you will need to enter your password for the kelo_tulip build to complete
 
-catkin build robile_description robile_gazebo
+colcon build --packages-select robile_gazebo robile_description 
 source ~/catkin_ws/devel/setup.bash
 ~~~
 
@@ -30,7 +30,7 @@ source ~/catkin_ws/devel/setup.bash
 To start the gazebo simulator, use one of the launch files defined in the [launch/](launch/) directory as follows:
 
 ~~~ sh
-roslaunch robile_gazebo 4_wheel_platform.launch
+ros2 launch robile_gazebo gazebo_4_wheel.launch.py
 ~~~
 
 You can then publish command velocities on the ros topic `/cmd_vel` to move the robot around. For example, to move the robot forward with 0.5 m/s velocity, execute the below command in a new terminal:
@@ -51,7 +51,7 @@ angular:
 The `kelo_tulip` platform controller requires information about every continuous (or movable) joint in all the connected KELO Drives. Moreover, it sends control data for every hub wheel. This can potentially increase the simulation load on weaker computers. If the goal of simulation is to move the robot around without worrying about the platform controller used, then `kelo_tulip` can be switched off and the more simpler [gazebo_ros_planar_move](https://classic.gazebosim.org/tutorials?tut=ros_gzplugins#PlanarMovePlugin) platform controller can be used. To start the simulation with the `gazebo_ros_planar_move` instead of `kelo_tulip` use the below command:
 
 ~~~ sh
-roslaunch robile_gazebo 4_wheel_platform.launch use_kelo_tulip:=false
+ros2 launch robile_gazebo gazebo_4_wheel.launch.py
 ~~~
 
 ### Moving the robot using a keyboard
