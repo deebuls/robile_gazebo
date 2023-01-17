@@ -60,14 +60,18 @@ def generate_launch_description():
             PathJoinSubstitution(
                 [
                     FindPackageShare("robile_description"),
-                    "robots",
-                    urdf_file_name
+                    "gazebo",
+                    "gazebo_robile.xacro"
                 ]
             ),
+            " ",
+            "platform_config:=4_wheel_config",
+            " ",
+            "movable_joints:=False",
         ]
     )
 
-    robot_state_pub_node = Node(
+    robot_state_pub_cmd = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
         output="screen",
@@ -84,11 +88,25 @@ def generate_launch_description():
                                               ],
                                   output=     'screen')
 
+    rviz_cmd = Node(package='rviz2',
+                    namespace='',
+                    executable='rviz2',
+                    name='rviz2'
+    )
+
+    static_transform_cmd = Node(package="tf2_ros",
+            executable="static_transform_publisher",
+            output="screen",
+            arguments=["0","0","0","0","0","0","base_footprint","base_link"]
+    )
+
     nodes = [
+        rviz_cmd,
         gzserver_cmd,
         gzclient_cmd,
-        robot_state_pub_node,
-        spawn_robot_gazebo_cmd
+        robot_state_pub_cmd,
+        spawn_robot_gazebo_cmd,
+        static_transform_cmd
     ]
 
     return LaunchDescription(nodes)
