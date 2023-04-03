@@ -19,15 +19,31 @@ def generate_launch_description():
 
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
+    namespace = LaunchConfiguration('namespace')
+    use_namespace = LaunchConfiguration('use_namespace')
+    use_rviz = LaunchConfiguration('use_rviz')
 
+    # Declare the launch arguments
+    declare_namespace_cmd = DeclareLaunchArgument(
+        'namespace',
+        default_value='',
+        description='Top-level namespace')
+
+    declare_use_namespace_cmd = DeclareLaunchArgument(
+        'use_namespace',
+        default_value='false',
+        description='Whether to apply a namespace to the navigation stack')
+    
     declare_use_sim_time_argument = DeclareLaunchArgument(
         'use_sim_time',
         default_value='true',
         description='Use simulation/Gazebo clock')
 
-    urdf_file_name = '4_wheel_config.urdf.xacro'
+    declare_use_rviz_cmd = DeclareLaunchArgument(
+        'use_rviz',
+        default_value='True',
+        description='Whether to start RVIZ')
 
-    print('urdf_file_name : {}'.format(urdf_file_name))
 
 
     x_pose = LaunchConfiguration('x_pose', default='-2.0')
