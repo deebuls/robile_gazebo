@@ -128,10 +128,15 @@ def generate_launch_description():
                                               ],
                                   output=     'screen')
 
+    rviz_config_file = PathJoinSubstitution(
+                       [FindPackageShare("robile_gazebo"), "config", "rviz", "robile.rviz"]
+                          )
+
     rviz_cmd = Node(package='rviz2',
                     namespace='',
                     executable='rviz2',
                     name='rviz2',
+                    arguments=['-d', rviz_config_file],
                     parameters=[{'use_sim_time': use_sim_time}],
     )
 
