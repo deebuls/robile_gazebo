@@ -27,9 +27,10 @@
     <depend>rclcpp</depend>
     <depend>sensor_msgs</depend>
     <depend>tf2</depend>
-    <depend>rviz</depend>
+    <depend>rviz2</depend>
     <export>
-      <build_type>ament_cmake</build_type>
+       <build_type>ament_cmake</build_type>
+       <gazebo_ros gazebo_model_path="${prefix}/models"/>
     </export>
 
 

@@ -123,7 +123,8 @@ def generate_launch_description():
                                                '-entity', 'robile',
                                                '-x', x_pose,
                                                '-y', y_pose,
-                                               '-Y', '0.78'
+                                               '-Y', '0.78',
+                                               '-timeout', '180'
                                               ],
                                   output=     'screen')
 
