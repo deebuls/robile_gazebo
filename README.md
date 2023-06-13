@@ -11,19 +11,21 @@ In addition to a few ROS dependencies, this package also depends on the followin
 
 Assuming you have a catkin workspace at `~/ros2_ws`, execute the below commands to install the simulator and its dependencies
 
-~~~ sh
-sudo apt install ros-$ROS_DISTRO-controller-manager ros-$ROS_DISTRO-effort-controllers ros-$ROS_DISTRO-velocity-controllers ros-$ROS_DISTRO-joint-state-controller ros-$ROS_DISTRO-gazebo-ros ros-$ROS_DISTRO-gazebo-ros-control
+```sh
 
 cd ~/catkin_ws/src
 git clone https://github.com/kelo-robotics/kelo_tulip.git
 git clone https://github.com/kelo-robotics/robile_description.git
 git clone https://github.com/kelo-robotics/robile_gazebo.git
 
+cd ~/catkin_ws
+rosdep install --from-paths src --ignore-src -r -y
+
 catkin build kelo_tulip # you will need to enter your password for the kelo_tulip build to complete
 
 colcon build --packages-select robile_gazebo robile_description 
 source ~/catkin_ws/devel/setup.bash
-~~~
+```
 
 ## Usage
 
@@ -53,6 +55,29 @@ The `kelo_tulip` platform controller requires information about every continuous
 ~~~ sh
 ros2 launch robile_gazebo gazebo_4_wheel.launch.py
 ~~~
+
+### Adding laser scanner to URDF
+
+You can add a laser scanner to the root by editing the  robile description and addting the following lines, for example in the robile_gaebo.xacro file
+~~~ xacro
+
+    <!-- sensors -->
+    <xacro:include filename="$(find robile_description)/urdf/sensors/hokuyo_urg04_laser.urdf.xacro"/>
+
+    <!-- base laser front -->
+    <xacro:hokuyo_urg04_laser name="base_laser_front" parent="base" ros_topic="scan_front" update_rate="10" min_angle="-1.57" max_angle="1.57">
+    <origin xyz="0.3 0 0.3" rpy="0 0 0"/>
+    </xacro:hokuyo_urg04_laser>
+
+~~~
+
+You also need to install the gazebo package to simulate the laser scanner 
+
+~~~ sh
+sudo apt install ros-$ROS_DISTRO-gazebo-ros-pkgs
+~~~
+
+Now if you launch you will have an additional topic ```/scan_front``` in rostopic list.
 
 ### Moving the robot using a keyboard
 
