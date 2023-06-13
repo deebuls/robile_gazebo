@@ -78,8 +78,12 @@ set(EXEC_NAME "robile_gazebo_platform_controller")
 #install(TARGETS ${EXEC_NAME}
 #  DESTINATION lib/${PROJECT_NAME}
 #)
-install(DIRECTORY config launch
+install(DIRECTORY config launch worlds models
   DESTINATION share/${PROJECT_NAME}/
+)
+install(
+  PROGRAMS scripts/generic_spawn.py
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 ################################################################################

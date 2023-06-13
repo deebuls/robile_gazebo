@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="cart_basement">
+    <link name="link">
+      <visual name="visual">
+	    <geometry>
+          <mesh>
+            <uri>model://cart_basement/meshes/cart_basement.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://cart_basement/meshes/cart_basement.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>    
+</link>
+  <static>1</static>
+  </model>
+</sdf>
