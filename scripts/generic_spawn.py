@@ -50,18 +50,45 @@ def main():
     tree = ET.parse(urdf_file_path)
     root = tree.getroot()
 
-    planar_move_plugin = None 
-    for plugin in root.iter('plugin'):
-        if 'gazebo_ros_planar_move' in plugin.attrib.values():
-            planar_move_plugin = plugin
-            break
+    if args.robot_name is not '':
+        planar_move_plugin = None 
+        for plugin in root.iter('plugin'):
+            if 'gazebo_ros_planar_move' in plugin.attrib.values():
+                planar_move_plugin = plugin
+                break
 
-    # We change the namespace to the robots corresponding one
-    tag_ros_params = planar_move_plugin.find('ros')
-    tag_ns = ET.SubElement(tag_ros_params, 'namespace')
-    tag_ns.text = '/' + args.robot_name
-    ros_tf_remap = ET.SubElement(tag_ros_params, 'remapping')   #Informs gazebo to puslish tf in different topic
-    ros_tf_remap.text = '/tf:=/' + args.robot_name + '/tf'
+        # We change the namespace to the robots corresponding one
+        tag_ros_params = planar_move_plugin.find('ros')
+        tag_ns = ET.SubElement(tag_ros_params, 'namespace')
+        tag_ns.text = '/' + args.robot_name
+        ros_tf_remap = ET.SubElement(tag_ros_params, 'remapping')   #Informs gazebo to puslish tf in different topic
+        ros_tf_remap.text = '/tf:=/' + args.robot_name + '/tf'
+        ros_tf_static_remap = ET.SubElement(tag_ros_params, 'remapping')   #Informs gazebo to puslish tf in different topic
+        ros_tf_static_remap.text = '/tf_static:=/' + args.robot_name + '/tf_static'
+
+        tag_odom_frame = planar_move_plugin.find('odometry_frame')
+        tag_odom_frame.text =  args.robot_name + '/' + tag_odom_frame.text
+        tag_robot_base_frame = planar_move_plugin.find('robot_base_frame')
+        robot_base_frame = tag_robot_base_frame.text
+        tag_robot_base_frame.text = args.robot_name + '/' + tag_robot_base_frame.text
+
+        print (ET.tostring(planar_move_plugin, encoding='unicode'))
+
+        base_laser_front_plugin = None 
+        for plugin in root.iter('plugin'):
+            if 'gazebo_ros_base_laser_front_controller' in plugin.attrib.values():
+                base_laser_front_plugin = plugin
+                break
+
+        # We change the namespace to the robots corresponding one
+        laser_tag_ros_params = base_laser_front_plugin.find('ros')
+        laser_tag_ns = ET.SubElement(laser_tag_ros_params, 'namespace')
+        laser_tag_ns.text = '/' + args.robot_name
+
+        laser_tf_frame_id = ET.SubElement(base_laser_front_plugin, 'frame_name')
+        laser_tf_frame_id.text = tag_robot_base_frame.text #same as the robot_base_frame text base_link or base_footprint
+        print ("LASER SCAN URDF : ROBOT BASER FRAME : ", tag_robot_base_frame.text)
+        print ("LASER SCAN URDF : ", ET.tostring(base_laser_front_plugin, encoding='unicode'))
 
     # Set data for request
     request = SpawnEntity.Request()
