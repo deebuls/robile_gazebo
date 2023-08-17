@@ -14,10 +14,15 @@ def gen_robot_list(number_of_robots):
     
     robots = []
     
-    for i in range(number_of_robots):
-        robot_name = "robile_"+ str(i)
-        x_pos = float(i)
-        robots.append({'name': robot_name, 'x_pose': x_pos, 'y_pose': 0.0, 'z_pose': 0.01})
+    #for i in range(number_of_robots):
+    #    robot_name = "robile_"+ str(i)
+    #    pos = float(i)
+    #    #starting robile 0 at -126,0.0 and robile_1 at -125,1
+    #    robots.append({'name': robot_name, 'x_pose': pos-126.0, 'y_pose': pos-0.0, 'z_pose': 0.01})
+
+    #starting robile_1 at -126,0.0 and robile_0 at -125,1
+    robots.append({'name': 'robile_0', 'x_pose': -125.0, 'y_pose': 1.0, 'z_pose': 0.01})
+    robots.append({'name': 'robile_1', 'x_pose': -126.0, 'y_pose': 0.0, 'z_pose': 0.01})
 
     return robots 
 
